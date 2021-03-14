@@ -16,12 +16,16 @@
   <!-- MY CSS -->
   <link rel="stylesheet" href="style.css" />
 
+  <!-- SweetAlert 2 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.css" rel="stylesheet">
+  </link>
+
   <title>My Portofolio | Bakri Ahmad Ridhwan</title>
 </head>
 
 <body id="home">
   <!-- NAVBAR -->
-  <nav class="navbar fixed-top navbar-expand-lg navbar-dark shadow-sm">
+  <nav class="navbar fixed-top navbar-expand-lg navbar-dark shadow-sm" style="background-color: #5000ca">
     <div class="container">
       <a class="navbar-brand" href="#home"><b>A.Md.</b></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -162,35 +166,46 @@
       </div>
       <div class="row justify-content-center">
         <div class="col-md-6">
-          <form>
+
+          <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+            <strong>TERIMA KASIH!</strong> Pesan anda sudah kami terima.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+
+          <form name="bakri-contact-form">
             <div class="mb-3">
               <label for="name" class="form-label">Full name</label>
-              <input type="email" class="form-control" id="name" name="name" aria-describedby="name">
+              <input required type="text" class="form-control" id="name" name="nama" aria-describedby="name">
 
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" name="email" aria-describedby="email">
+              <input required type="email" class="form-control" id="email" name="email" aria-describedby="email">
             </div>
             <div class="mb-3">
               <label for="message" class="form-label">Your Message</label>
-              <textarea class="form-control" id="message" rows="3"></textarea>
+              <textarea required class="form-control" id="message" rows="3" name="pesan"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Send</button>
+            <button type="submit" class="btn btn-primary btn-kirim">Send</button>
+
+            <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Loading...
+            </button>
           </form>
         </div>
       </div>
     </div>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-      <path fill="#0d6efd" fill-opacity="1"
-        d="M0,192L40,181.3C80,171,160,149,240,160C320,171,400,213,480,224C560,235,640,213,720,208C800,203,880,213,960,218.7C1040,224,1120,224,1200,186.7C1280,149,1360,75,1400,37.3L1440,0L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z">
+      <path fill="#5000ca" fill-opacity="1"
+        d="M0,32L48,58.7C96,85,192,139,288,144C384,149,480,107,576,122.7C672,139,768,213,864,245.3C960,277,1056,267,1152,229.3C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z">
       </path>
     </svg>
   </section>
   <!-- AKHIR CONTACT -->
 
   <!-- FOOTER -->
-  <footer class="bg-primary text-white text-center pb-4">
+  <footer class="text-white text-center pb-4" style="background-color: #5000ca">
     <p>Created with <i class="bi bi-heart-fill text-danger"></i> by <a href="#" class="text-white fw-bold">Bakri Ahmad
         Ridhwan</a>
     </p>
@@ -209,6 +224,61 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js" integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js" integrity="sha384-nsg8ua9HAw1y0W1btsyWgBklPnCUAFLuTMS2G72MMONqmOymq585AcH49TLBQObG" crossorigin="anonymous"></script>
     -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.33.1/sweetalert2.min.js"></script>
+  <!-- <script>
+    const tombol = document.querySelector('#tombol');
+    tombol.addEventListener('click', function () {
+      Swal({
+        title: 'Halo Bakri!',
+        text: 'Latihan SweetAlert2',
+        type: 'warning'
+      });
+    });
+  </script> -->
+
+  <script>
+    const scriptURL =
+      'https://script.google.com/macros/s/AKfycbz5Ss344EuPXr8u0YHLs7Ov85DKKPA6MAiaF98cYvjmPE1nmNWGjLx4klLQgEdmnQlm_A/exec'
+    const form = document.forms['bakri-contact-form']
+    const btnKirim = document.querySelector('.btn-kirim');
+    const btnLoading = document.querySelector('.btn-loading');
+    const myAlert = document.querySelector('.my-alert')
+
+    form.addEventListener('submit', e => {
+      e.preventDefault()
+
+      // ketika tombol send diklik
+      // tampilkan tombol loading dan hilangkan tombol send
+      btnLoading.classList.toggle('d-none');
+      btnKirim.classList.toggle('d-none');
+
+      fetch(scriptURL, {
+          method: 'POST',
+          body: new FormData(form)
+        })
+        // tampilkan tombol send, dan hilangkan tomboh loading
+        .then(response => {
+
+          btnLoading.classList.toggle('d-none');
+          btnKirim.classList.toggle('d-none');
+          // menampilkan alert
+          // myAlert.classList.toggle('d-none');
+          // Menampilkan SweetAlert
+          Swal({
+            title: 'TERIMA KASIH!',
+            text: 'Pesan anda sudah kami terima.',
+            type: 'success'
+          });
+          // reset form
+          form.reset();
+
+
+          console.log('Success!', response)
+        })
+        .catch(error => console.error('Error!', error.message))
+    })
+  </script>
 </body>
 
 </html>
